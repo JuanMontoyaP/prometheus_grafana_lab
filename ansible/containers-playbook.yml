@@ -1,0 +1,20 @@
+---
+- name: Deploy Multiple Containers on AWS EC2 Instances
+  hosts: tag_Name_Node_Exporter
+  become: true
+
+  roles:
+    - role: update_ubuntu_host
+      update_ubuntu_host_additional_packages:
+        - vim
+        - curl
+        - aptitude
+
+  tasks:
+    - name: Deploy ubuntu container
+      community.docker.docker_container:
+        name: ubuntu_container
+        image: ubuntu:latest
+        state: started
+        restart_policy: unless-stopped
+        command: sleep infinity

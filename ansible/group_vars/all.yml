@@ -1,0 +1,17 @@
+---
+# Group variables for all Ubuntu servers
+# These will override role defaults
+
+# Additional packages for all Ubuntu servers
+update_ubuntu_host_additional_packages:
+  - htop
+  - vim
+  - curl
+  - net-tools
+  - software-properties-common
+
+# Conservative update settings for production
+update_ubuntu_host_upgrade_packages: true
+update_ubuntu_host_update_cache: true
+update_ubuntu_host_autoremove: true
+update_ubuntu_host_autoclean: true

@@ -1,0 +1,12 @@
+---
+# vars file for update_ubuntu_host
+# Environment-specific packages (these take precedence over defaults)
+# Uncomment and modify as needed:
+
+# update_ubuntu_host_additional_packages:
+#   - monitoring-agent
+#   - security-tools
+
+# For production environments, you might want to be more conservative:
+# update_ubuntu_host_upgrade_packages: false
+# update_ubuntu_host_update_cache: false

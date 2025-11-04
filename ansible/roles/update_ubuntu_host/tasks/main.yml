@@ -1,0 +1,21 @@
+---
+# tasks file for update_ubuntu_host
+- name: Update & upgrade packages
+  ansible.builtin.apt:
+    state: present
+    update_cache: "{{ update_ubuntu_host_update_cache }}"
+    autoclean: "{{ update_ubuntu_host_autoclean }}"
+    autoremove: "{{ update_ubuntu_host_autoremove }}"
+    clean: true
+    upgrade: "{{ 'dist' if update_ubuntu_host_upgrade_packages else 'no' }}"
+
+- name: Install basic packages
+  ansible.builtin.apt:
+    name: "{{ update_ubuntu_host_basic_packages }}"
+    state: present
+
+- name: Install additional packages
+  ansible.builtin.apt:
+    name: "{{ update_ubuntu_host_additional_packages }}"
+    state: present
+  when: update_ubuntu_host_additional_packages | length > 0

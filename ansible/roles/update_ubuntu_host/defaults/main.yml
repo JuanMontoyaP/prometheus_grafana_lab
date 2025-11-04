@@ -1,0 +1,18 @@
+---
+# defaults file for update_ubuntu_host
+
+# List of basic packages to install
+update_ubuntu_host_basic_packages:
+  - wget
+  - tar
+  - unzip
+  - gzip
+
+# Additional packages that can be specified per host/environment
+update_ubuntu_host_additional_packages: []
+
+# Package update configuration
+update_ubuntu_host_update_cache: true
+update_ubuntu_host_upgrade_packages: true
+update_ubuntu_host_autoremove: true
+update_ubuntu_host_autoclean: true

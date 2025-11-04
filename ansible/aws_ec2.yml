@@ -1,0 +1,17 @@
+plugin: amazon.aws.aws_ec2
+region: us-west-1
+include_filters:
+  - tag:Project:
+      - 'Prometheus-Labs'
+  - instance-state-name: running
+
+keyed_groups:
+  - prefix: "tag_Name"
+    key: tags.Name
+
+# Compose groups for better organization
+compose:
+  ansible_host: public_ip_address
+  ec2_state: state.name
+  ec2_type: instance_type
+  ec2_name: tags.Name | default('unnamed')

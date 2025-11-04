@@ -1,0 +1,5 @@
+groups:
+- name: containers
+  rules:
+  - record: name_cpu:container_cpu_usage:sum_rate5m
+    expr: sum by (name, instance) (rate(container_cpu_usage_seconds_total{image!=""}[5m]))

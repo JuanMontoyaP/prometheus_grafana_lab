@@ -1,0 +1,74 @@
+---
+- name: Deploy Prometheus on AWS EC2 Instances
+  hosts: tag_Name_Node_Exporter
+  become: true
+
+  pre_tasks:
+    - name: Install system packages for docker
+      ansible.builtin.apt:
+        pkg:
+          - apt-transport-https
+          - ca-certificates
+          - software-properties-common
+          - python3-pip
+          - virtualenv
+          - python3-setuptools
+          - python3-docker
+        state: present
+        update_cache: true
+
+    - name: Add Docker GPG key
+      ansible.builtin.apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker repository
+      ansible.builtin.apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu noble stable
+        state: present
+
+    - name: Install Docker CE
+      ansible.builtin.apt:
+        name: docker-ce
+        state: present
+        update_cache: true
+
+    - name: Add user to docker group
+      ansible.builtin.user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: true
+
+    - name: Start and enable Docker service
+      ansible.builtin.systemd:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Reset ssh connection to allow user group changes to take effect
+      ansible.builtin.meta: reset_connection
+
+  roles:
+    - role: update_ubuntu_host
+      update_ubuntu_host_additional_packages:
+        - vim
+        - curl
+        - aptitude
+    - role: prometheus.prometheus.node_exporter
+    - role: prometheus.prometheus.cadvisor
+
+  post_tasks:
+    - name: Verify Docker installation
+      ansible.builtin.command: docker --version
+      register: docker_version
+      changed_when: false
+
+    - name: Display Docker version
+      ansible.builtin.debug:
+        msg: "Docker version installed: {{ docker_version.stdout }}"
+
+    - name: Ensure node exporter is started and enabled
+      ansible.builtin.systemd:
+        name: node_exporter
+        state: started
+        enabled: true

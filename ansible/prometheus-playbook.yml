@@ -1,0 +1,21 @@
+---
+- name: Deploy Prometheus on AWS EC2 Instances
+  hosts: tag_Name_Prometheus_Server
+  become: true
+
+  roles:
+    - role: update_ubuntu_host
+
+    - role: prometheus.prometheus.prometheus
+      prometheus_global:
+        scrape_interval: 15s
+      prometheus_external_labels:
+        monitor: "prometheus-server"
+      prometheus_scrape_configs:
+        [
+          {
+            "job_name": "prometheus",
+            "metrics_path": "{{ prometheus_metrics_path }}",
+            "static_configs": [{ "targets": ["localhost:9090"] }],
+          },
+        ]
